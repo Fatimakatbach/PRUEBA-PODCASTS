@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block contenedor_principal %}
+
+<nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+  <a class="navbar-brand" href="{{ path('app_index') }}">Mis podcasts</a>
+  <button class="navbar-toggler p-0 border-0"
+    type="button"
+    data-toggle="offcanvas">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+  {% if app.user %}
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+      <a class="nav-link"  href="{{ path('app_index') }}">
+        Todos
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  href="{{ path('app_favorito') }}">
+        Favoritos
+      </a>
+    </li>
+
+    </ul>
+    {% if is_granted('ROLE_ADMIN') %}
+    <div class="d-md-flex my-2 my-lg-0">
+      <a class="btn btn-outline-success mr-2 w-100 mb-3 mb-sm-0" title="Gestión de categorias" href="{{ path('app_usuario_index')}}">
+        Usuarios
+      </a>
+      <a class="btn btn-outline-success mr-2 w-100 mb-3 mb-sm-0" title="Gestión de categorias" href="{{ path('app_index')}}">
+        Podcasts
+      </a>
+      {% endif %}
+      <a class="btn btn-outline-success mr-2 w-100" title="Añadir podcast" href="{{ path('app_podcast_new')}}">
+        <span class="oi oi-plus" title="añadir" aria-hidden="true"></span>
+        Podcast
+      </a>
+    </div>
+    <form class="form-inline">
+        <input class="form-control mr-sm-2"
+          type="text"
+          placeholder="Buscar"
+          aria-label="Search" />
+        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">
+          Buscar
+        </button>
+      </form>
+
+      {% if formulario_busqueda is defined %}
+      {{
+       include(
+        'busqueda/_busqueda.html.twig',
+        {
+          formulario_busqueda: formulario_busqueda 
+        }
+        )
+       }}
+      {% else %}
+    
+        render(
+          controller(
+            'App\\Controller\\BusquedaController::busqueda',
+
+          )
+        )
+         
+      {% endif %}
+
+      {{include('usuario/_logout.html.twig')}}
+
+  {% endif %}
+  </div>
+</nav>
+
+{% endblock %}
